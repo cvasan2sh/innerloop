@@ -1496,21 +1496,40 @@
     };
 
     if (GOOGLE_SHEETS_URL && GOOGLE_SHEETS_URL !== 'YOUR_GOOGLE_SHEETS_WEBAPP_URL') {
-      // Apps Script approach: send as form data to avoid CORS issues
-      const formData = new URLSearchParams();
-      Object.entries(payload).forEach(([k, v]) => formData.append(k, v));
+      // Use hidden iframe + form to avoid CORS issues with Apps Script
+      try {
+        var iframe = document.createElement('iframe');
+        iframe.name = 'hidden_iframe_' + Date.now();
+        iframe.style.display = 'none';
+        document.body.appendChild(iframe);
 
-      fetch(GOOGLE_SHEETS_URL, {
-        method: 'POST',
-        body: formData,
-      }).then(res => {
-        console.log('✅ Sheet submission sent');
-      }).catch(err => console.warn('Sheet submission error:', err))
-        .finally(() => {
-          submitBtn.textContent = origText;
-          submitBtn.disabled = false;
-          obGo(3);
+        var form = document.createElement('form');
+        form.method = 'POST';
+        form.action = GOOGLE_SHEETS_URL;
+        form.target = iframe.name;
+
+        Object.entries(payload).forEach(function([key, val]) {
+          var input = document.createElement('input');
+          input.type = 'hidden';
+          input.name = key;
+          input.value = val || '';
+          form.appendChild(input);
         });
+
+        document.body.appendChild(form);
+        form.submit();
+        form.remove();
+
+        // Clean up iframe after a delay
+        setTimeout(function() { iframe.remove(); }, 5000);
+        console.log('✅ Sheet submission sent');
+      } catch(err) {
+        console.warn('Sheet submission error:', err);
+      }
+
+      submitBtn.textContent = origText;
+      submitBtn.disabled = false;
+      obGo(3);
     } else {
       // No webhook configured — just log and proceed
       console.log('📋 Waitlist signup (no webhook configured):', payload);
