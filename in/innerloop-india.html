@@ -1,0 +1,1542 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>InnerLoop — Stop Skimming. Start Knowing. | India</title>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Libre+Franklin:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #FAFAF7;
+    --bg-warm: #F5F3EE;
+    --surface: #FFFFFF;
+    --surface-dark: #0C0C0E;
+    --ink: #1A1A1F;
+    --ink-light: #4A4A52;
+    --ink-muted: #8A8A92;
+    --ink-faint: #BBBBC2;
+    --border: #E4E2DD;
+    --border-dark: #D0CEC8;
+    --accent: #C84B31;
+    --accent-light: #E8654A;
+    --accent-bg: rgba(200, 75, 49, 0.06);
+    --accent-bg-strong: rgba(200, 75, 49, 0.12);
+    --gold: #B8860B;
+    --gold-bg: rgba(184, 134, 11, 0.08);
+    --green: #2D8A4E;
+    --green-bg: rgba(45, 138, 78, 0.08);
+    --blue: #2563EB;
+    --blue-bg: rgba(37, 99, 235, 0.06);
+    --radius: 10px;
+    --radius-sm: 6px;
+    --radius-lg: 16px;
+    --font-display: 'Instrument Serif', serif;
+    --font-body: 'Libre Franklin', sans-serif;
+    --font-mono: 'JetBrains Mono', monospace;
+    --shadow-sm: 0 1px 3px rgba(0,0,0,0.04), 0 1px 2px rgba(0,0,0,0.06);
+    --shadow-md: 0 4px 16px rgba(0,0,0,0.06), 0 1px 3px rgba(0,0,0,0.04);
+    --shadow-lg: 0 12px 40px rgba(0,0,0,0.08), 0 4px 12px rgba(0,0,0,0.04);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: var(--font-body);
+    background: var(--bg);
+    color: var(--ink);
+    -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
+  }
+
+  /* ====== NAV ====== */
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    padding: 16px 32px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: rgba(250, 250, 247, 0.85);
+    backdrop-filter: blur(16px);
+    border-bottom: 1px solid var(--border);
+  }
+
+  .nav-brand {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .nav-logo {
+    width: 32px;
+    height: 32px;
+    background: var(--accent);
+    border-radius: 7px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: var(--font-display);
+    font-size: 17px;
+    color: white;
+    font-weight: bold;
+  }
+
+  .nav-name {
+    font-family: var(--font-display);
+    font-size: 20px;
+    color: var(--ink);
+  }
+
+  .nav-tag {
+    font-size: 10px;
+    font-weight: 700;
+    color: var(--accent);
+    background: var(--accent-bg);
+    padding: 3px 8px;
+    border-radius: 20px;
+    letter-spacing: 0.8px;
+    text-transform: uppercase;
+  }
+
+  .nav-cta {
+    padding: 10px 24px;
+    background: var(--ink);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-family: var(--font-body);
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+
+  .nav-cta:hover { background: #333; transform: translateY(-1px); }
+
+  /* ====== HERO ====== */
+  .hero {
+    padding: 140px 32px 80px;
+    max-width: 1080px;
+    margin: 0 auto;
+    text-align: center;
+  }
+
+  .hero-eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 16px 6px 8px;
+    background: var(--accent-bg);
+    border-radius: 40px;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--accent);
+    margin-bottom: 28px;
+    animation: fadeUp 0.6s ease both;
+  }
+
+  .hero-eyebrow .pulse-dot {
+    width: 8px;
+    height: 8px;
+    background: var(--accent);
+    border-radius: 50%;
+    animation: pulse 2s infinite;
+  }
+
+  .hero h1 {
+    font-family: var(--font-display);
+    font-size: clamp(42px, 6vw, 72px);
+    line-height: 1.08;
+    color: var(--ink);
+    max-width: 780px;
+    margin: 0 auto 24px;
+    animation: fadeUp 0.6s ease 0.1s both;
+    letter-spacing: -1px;
+  }
+
+  .hero h1 em {
+    font-style: italic;
+    color: var(--accent);
+  }
+
+  .hero-sub {
+    font-size: 18px;
+    line-height: 1.6;
+    color: var(--ink-light);
+    max-width: 560px;
+    margin: 0 auto 40px;
+    font-weight: 400;
+    animation: fadeUp 0.6s ease 0.2s both;
+  }
+
+  .hero-cta-group {
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+    align-items: center;
+    animation: fadeUp 0.6s ease 0.3s both;
+    flex-wrap: wrap;
+  }
+
+  .cta-main {
+    padding: 16px 36px;
+    background: var(--accent);
+    color: white;
+    border: none;
+    border-radius: var(--radius);
+    font-family: var(--font-body);
+    font-size: 15px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+
+  .cta-main:hover {
+    background: var(--accent-light);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(200, 75, 49, 0.25);
+  }
+
+  .cta-ghost {
+    padding: 16px 28px;
+    background: transparent;
+    color: var(--ink-light);
+    border: 1.5px solid var(--border-dark);
+    border-radius: var(--radius);
+    font-family: var(--font-body);
+    font-size: 15px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+
+  .cta-ghost:hover { border-color: var(--ink); color: var(--ink); }
+
+  .hero-proof {
+    margin-top: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    animation: fadeUp 0.6s ease 0.4s both;
+  }
+
+  .mini-avatars { display: flex; }
+
+  .mini-avatar {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    border: 2px solid var(--bg);
+    margin-left: -6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 11px;
+    font-weight: 700;
+    color: white;
+  }
+
+  .mini-avatar:first-child { margin-left: 0; }
+
+  .hero-proof-text {
+    font-size: 13px;
+    color: var(--ink-muted);
+  }
+
+  .hero-proof-text strong { color: var(--ink-light); }
+
+  /* ====== PAIN ====== */
+  .pain-section {
+    padding: 80px 32px;
+    background: var(--bg-warm);
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+  }
+
+  .pain-inner { max-width: 880px; margin: 0 auto; }
+
+  .pain-section h2 {
+    font-family: var(--font-display);
+    font-size: 36px;
+    text-align: center;
+    margin-bottom: 12px;
+    line-height: 1.2;
+  }
+
+  .pain-subtitle {
+    text-align: center;
+    font-size: 16px;
+    color: var(--ink-light);
+    margin-bottom: 48px;
+    max-width: 520px;
+    margin-left: auto;
+    margin-right: auto;
+    line-height: 1.5;
+  }
+
+  .pain-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+  }
+
+  .pain-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 28px 24px;
+    transition: transform 0.2s, box-shadow 0.2s;
+  }
+
+  .pain-card:hover { transform: translateY(-3px); box-shadow: var(--shadow-md); }
+
+  .pain-icon { font-size: 28px; margin-bottom: 16px; }
+
+  .pain-card h3 { font-size: 15px; font-weight: 700; margin-bottom: 8px; }
+
+  .pain-card p { font-size: 13.5px; color: var(--ink-light); line-height: 1.55; }
+
+  .pain-card .time-waste {
+    display: inline-block;
+    margin-top: 12px;
+    font-family: var(--font-mono);
+    font-size: 12px;
+    color: var(--accent);
+    background: var(--accent-bg);
+    padding: 4px 10px;
+    border-radius: 4px;
+    font-weight: 500;
+  }
+
+  /* ====== HOW ====== */
+  .how-section {
+    padding: 80px 32px;
+    max-width: 920px;
+    margin: 0 auto;
+  }
+
+  .how-section h2 {
+    font-family: var(--font-display);
+    font-size: 36px;
+    text-align: center;
+    margin-bottom: 48px;
+  }
+
+  .how-steps {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 32px;
+  }
+
+  .how-step { text-align: center; }
+
+  .how-num {
+    width: 44px; height: 44px;
+    background: var(--ink); color: white;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-family: var(--font-display);
+    font-size: 20px;
+    margin: 0 auto 16px;
+  }
+
+  .how-step h3 { font-size: 16px; font-weight: 700; margin-bottom: 8px; }
+
+  .how-step p { font-size: 14px; color: var(--ink-light); line-height: 1.5; }
+
+  /* ====== DEMO ====== */
+  .demo-section {
+    padding: 80px 32px;
+    background: var(--surface-dark);
+    color: white;
+  }
+
+  .demo-inner { max-width: 780px; margin: 0 auto; }
+
+  .demo-section h2 {
+    font-family: var(--font-display);
+    font-size: 36px;
+    text-align: center;
+    margin-bottom: 8px;
+    color: white;
+  }
+
+  .demo-subtitle {
+    text-align: center;
+    font-size: 15px;
+    color: rgba(255,255,255,0.5);
+    margin-bottom: 40px;
+  }
+
+  .demo-brief {
+    background: #18181B;
+    border: 1px solid #2A2A30;
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.4);
+  }
+
+  .demo-brief-header {
+    padding: 20px 28px;
+    border-bottom: 1px solid #2A2A30;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .demo-brief-meta {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: rgba(255,255,255,0.35);
+  }
+
+  .demo-brief-for {
+    font-size: 14px;
+    color: rgba(255,255,255,0.6);
+    margin-top: 4px;
+  }
+
+  .demo-brief-for strong { color: var(--accent-light); }
+
+  .demo-brief-badge {
+    font-size: 10px; font-weight: 700;
+    color: var(--accent-light);
+    background: rgba(200, 75, 49, 0.15);
+    padding: 4px 12px; border-radius: 20px;
+    letter-spacing: 0.8px; text-transform: uppercase;
+  }
+
+  .demo-section-block {
+    padding: 20px 28px;
+    border-bottom: 1px solid #2A2A30;
+  }
+
+  .demo-section-block:last-child { border-bottom: none; }
+
+  .demo-section-label {
+    font-size: 10px; font-weight: 700;
+    color: rgba(255,255,255,0.3);
+    letter-spacing: 1.2px; text-transform: uppercase;
+    margin-bottom: 14px;
+    display: flex; align-items: center; gap: 8px;
+  }
+
+  .demo-section-label .dot {
+    width: 6px; height: 6px; border-radius: 50%; display: inline-block;
+  }
+
+  .demo-item {
+    display: flex; gap: 14px; padding: 12px 0; align-items: flex-start;
+  }
+
+  .demo-item + .demo-item { border-top: 1px solid rgba(255,255,255,0.04); }
+
+  .demo-signal { font-size: 20px; width: 32px; text-align: center; flex-shrink: 0; padding-top: 2px; }
+
+  .demo-content h4 { font-size: 14px; font-weight: 600; color: rgba(255,255,255,0.9); margin-bottom: 4px; line-height: 1.35; }
+
+  .demo-content p { font-size: 13px; color: rgba(255,255,255,0.45); line-height: 1.5; }
+
+  .demo-action-tag {
+    display: inline-flex; align-items: center; gap: 4px;
+    margin-top: 8px; font-size: 11px; font-weight: 600;
+    color: var(--accent-light);
+    background: rgba(200, 75, 49, 0.1);
+    padding: 4px 10px; border-radius: 4px; cursor: pointer;
+  }
+
+  .demo-blur-block { position: relative; padding: 20px 28px 40px; }
+
+  .demo-blur-block::after {
+    content: ''; position: absolute; inset: 0;
+    background: linear-gradient(to bottom, transparent, #18181B 75%);
+    pointer-events: none;
+  }
+
+  .demo-blur-inner { filter: blur(5px); opacity: 0.35; }
+
+  .demo-unlock {
+    position: absolute; bottom: 28px; left: 50%; transform: translateX(-50%);
+    z-index: 2; text-align: center; white-space: nowrap;
+  }
+
+  .demo-unlock-text { font-size: 14px; color: rgba(255,255,255,0.5); margin-bottom: 6px; }
+
+  .demo-unlock-cta { font-size: 14px; font-weight: 700; color: var(--accent-light); cursor: pointer; }
+
+  /* ====== AGENTS ====== */
+  .agents-section {
+    padding: 80px 32px;
+    background: var(--bg-warm);
+    border-top: 1px solid var(--border);
+  }
+
+  .agents-inner { max-width: 880px; margin: 0 auto; }
+
+  .agents-section h2 {
+    font-family: var(--font-display);
+    font-size: 36px;
+    text-align: center;
+    margin-bottom: 8px;
+  }
+
+  .agents-subtitle {
+    text-align: center; font-size: 15px; color: var(--ink-light); margin-bottom: 48px;
+  }
+
+  .agent-cards { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; }
+
+  .agent-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 28px 24px;
+    transition: all 0.2s;
+  }
+
+  .agent-card:hover { transform: translateY(-2px); box-shadow: var(--shadow-md); }
+
+  .agent-card-icon {
+    width: 44px; height: 44px; border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 22px; margin-bottom: 16px;
+  }
+
+  .agent-card h3 { font-size: 16px; font-weight: 700; margin-bottom: 6px; }
+
+  .agent-card p { font-size: 13.5px; color: var(--ink-light); line-height: 1.5; }
+
+  .agent-card .agent-example {
+    margin-top: 14px; padding: 10px 14px;
+    background: var(--bg-warm); border-radius: var(--radius-sm);
+    font-family: var(--font-mono); font-size: 11.5px;
+    color: var(--ink-muted); line-height: 1.5;
+    border-left: 3px solid var(--border-dark);
+  }
+
+  /* ====== ONBOARDING ====== */
+  .onboarding-section {
+    padding: 80px 32px;
+    border-top: 1px solid var(--border);
+  }
+
+  .onboarding-inner { max-width: 600px; margin: 0 auto; }
+
+  .ob-progress { margin-bottom: 36px; }
+
+  .ob-steps { display: flex; align-items: center; }
+
+  .ob-dot {
+    width: 30px; height: 30px; border-radius: 50%;
+    background: var(--bg-warm); border: 2px solid var(--border);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 12px; font-weight: 700; color: var(--ink-muted);
+    transition: all 0.3s; flex-shrink: 0;
+  }
+
+  .ob-dot.active { background: var(--accent); border-color: var(--accent); color: white; box-shadow: 0 0 16px rgba(200,75,49,0.2); }
+
+  .ob-dot.done { background: var(--green); border-color: var(--green); color: white; }
+
+  .ob-line { flex: 1; height: 2px; background: var(--border); transition: background 0.3s; }
+
+  .ob-line.filled { background: var(--green); }
+
+  .ob-labels { display: flex; justify-content: space-between; margin-top: 8px; }
+
+  .ob-label { font-size: 11px; color: var(--ink-faint); font-weight: 600; letter-spacing: 0.3px; }
+
+  .ob-label.active { color: var(--accent); }
+  .ob-label.done { color: var(--green); }
+
+  .ob-title { font-family: var(--font-display); font-size: 30px; margin-bottom: 8px; line-height: 1.2; }
+
+  .ob-subtitle { font-size: 15px; color: var(--ink-light); margin-bottom: 28px; line-height: 1.5; }
+
+  /* Form */
+  .field { margin-bottom: 18px; }
+
+  .field label {
+    display: block; font-size: 11.5px; font-weight: 700;
+    color: var(--ink-muted); letter-spacing: 0.5px;
+    text-transform: uppercase; margin-bottom: 7px;
+  }
+
+  .field input, .field select {
+    width: 100%; padding: 13px 16px;
+    background: var(--surface); border: 1.5px solid var(--border);
+    border-radius: var(--radius-sm); color: var(--ink);
+    font-family: var(--font-body); font-size: 14px;
+    outline: none; transition: all 0.2s;
+  }
+
+  .field input::placeholder { color: var(--ink-faint); }
+
+  .field input:focus, .field select:focus {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px var(--accent-bg);
+  }
+
+  .field select {
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%238A8A92' fill='none' stroke-width='1.5'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 14px center;
+    cursor: pointer;
+  }
+
+  .row-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+
+  .chips { display: flex; flex-wrap: wrap; gap: 8px; }
+
+  .chip {
+    padding: 9px 16px; background: var(--surface);
+    border: 1.5px solid var(--border); border-radius: 40px;
+    font-size: 13px; font-weight: 500; color: var(--ink-light);
+    cursor: pointer; transition: all 0.15s; user-select: none;
+  }
+
+  .chip:hover { border-color: var(--border-dark); color: var(--ink); }
+
+  .chip.selected { background: var(--accent-bg-strong); border-color: var(--accent); color: var(--accent); }
+
+  .btn-primary {
+    width: 100%; padding: 15px;
+    background: var(--accent); color: white; border: none;
+    border-radius: var(--radius);
+    font-family: var(--font-body); font-size: 15px; font-weight: 700;
+    cursor: pointer; transition: all 0.2s; margin-top: 10px;
+  }
+
+  .btn-primary:hover {
+    background: var(--accent-light); transform: translateY(-1px);
+    box-shadow: 0 6px 20px rgba(200,75,49,0.2);
+  }
+
+  .btn-secondary {
+    background: transparent; border: 1.5px solid var(--border);
+    color: var(--ink-light); padding: 13px;
+    border-radius: var(--radius);
+    font-family: var(--font-body); font-size: 14px; font-weight: 500;
+    cursor: pointer; transition: all 0.2s; width: 100%;
+  }
+
+  .btn-secondary:hover { border-color: var(--ink-muted); color: var(--ink); }
+
+  .btn-row { display: grid; grid-template-columns: 1fr 2fr; gap: 10px; margin-top: 12px; }
+
+  /* Pages */
+  .ob-page { display: none; animation: fadeUp 0.35s ease; }
+  .ob-page.active { display: block; }
+
+  /* ====== THANK YOU PAGE ====== */
+  .ty-container {
+    text-align: center;
+    max-width: 520px;
+    margin: 0 auto;
+  }
+
+  .ty-icon {
+    width: 80px; height: 80px;
+    background: var(--green-bg);
+    border: 2px solid var(--green);
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 36px;
+    margin: 0 auto 24px;
+    animation: scaleIn 0.4s ease;
+  }
+
+  @keyframes scaleIn {
+    from { transform: scale(0.5); opacity: 0; }
+    to { transform: scale(1); opacity: 1; }
+  }
+
+  .ty-title {
+    font-family: var(--font-display);
+    font-size: 32px;
+    margin-bottom: 12px;
+    line-height: 1.2;
+  }
+
+  .ty-message {
+    font-size: 16px;
+    color: var(--ink-light);
+    line-height: 1.65;
+    margin-bottom: 32px;
+  }
+
+  .ty-message strong { color: var(--ink); }
+
+  .ty-card {
+    background: var(--bg-warm);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 24px 28px;
+    margin-bottom: 24px;
+    text-align: left;
+  }
+
+  .ty-card-title {
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--ink-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    margin-bottom: 14px;
+  }
+
+  .ty-row {
+    display: flex;
+    justify-content: space-between;
+    padding: 8px 0;
+    font-size: 14px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .ty-row:last-child { border-bottom: none; }
+
+  .ty-row .lbl { color: var(--ink-muted); }
+  .ty-row .val { color: var(--ink); font-weight: 600; text-align: right; max-width: 60%; }
+
+  .ty-position {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 20px;
+    background: var(--accent-bg);
+    border: 1px solid rgba(200,75,49,0.15);
+    border-radius: var(--radius);
+    font-size: 14px;
+    color: var(--accent);
+    font-weight: 600;
+    margin-bottom: 28px;
+  }
+
+  .ty-position .pos-num {
+    font-family: var(--font-display);
+    font-size: 28px;
+    color: var(--accent);
+    line-height: 1;
+  }
+
+  .ty-what-next {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 24px 28px;
+    margin-bottom: 24px;
+    text-align: left;
+  }
+
+  .ty-what-next h3 {
+    font-size: 15px;
+    font-weight: 700;
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .ty-timeline {
+    position: relative;
+    padding-left: 28px;
+  }
+
+  .ty-timeline::before {
+    content: '';
+    position: absolute;
+    left: 8px;
+    top: 4px;
+    bottom: 4px;
+    width: 2px;
+    background: var(--border);
+  }
+
+  .ty-timeline-item {
+    position: relative;
+    padding-bottom: 20px;
+  }
+
+  .ty-timeline-item:last-child { padding-bottom: 0; }
+
+  .ty-timeline-item::before {
+    content: '';
+    position: absolute;
+    left: -22px;
+    top: 6px;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: var(--accent);
+    border: 2px solid var(--bg);
+  }
+
+  .ty-timeline-item .tl-label {
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--accent);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 3px;
+  }
+
+  .ty-timeline-item .tl-text {
+    font-size: 13.5px;
+    color: var(--ink-light);
+    line-height: 1.5;
+  }
+
+  .ty-share-section {
+    margin-top: 8px;
+  }
+
+  .ty-share-text {
+    font-size: 14px;
+    color: var(--ink-light);
+    margin-bottom: 12px;
+  }
+
+  .ty-share-row {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+  }
+
+  .ty-share-btn {
+    padding: 12px 20px;
+    border-radius: var(--radius);
+    font-family: var(--font-body);
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+    border: 1.5px solid var(--border);
+    background: var(--surface);
+    color: var(--ink);
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .ty-share-btn:hover { transform: translateY(-1px); box-shadow: var(--shadow-sm); }
+
+  .ty-share-btn.wa { border-color: #25D366; color: #25D366; }
+  .ty-share-btn.li { border-color: #0A66C2; color: #0A66C2; }
+  .ty-share-btn.tw { border-color: var(--ink); color: var(--ink); }
+  .ty-share-btn.cp { border-color: var(--accent); color: var(--accent); }
+
+  .ty-footer {
+    margin-top: 32px;
+    font-size: 13px;
+    color: var(--ink-faint);
+    line-height: 1.6;
+  }
+
+  /* ====== FUNNEL ====== */
+  .funnel-toggle {
+    position: fixed; bottom: 16px; right: 16px;
+    background: var(--surface-dark); color: white;
+    border: none; border-radius: 8px;
+    padding: 10px 14px;
+    font-family: var(--font-mono); font-size: 12px;
+    cursor: pointer; z-index: 200; box-shadow: var(--shadow-lg);
+  }
+
+  .funnel-panel {
+    position: fixed; bottom: 56px; right: 16px;
+    background: var(--surface-dark); color: white;
+    border-radius: var(--radius); padding: 20px;
+    font-size: 12px; z-index: 200; min-width: 220px;
+    display: none; box-shadow: var(--shadow-lg);
+  }
+
+  .funnel-panel.visible { display: block; }
+
+  .funnel-panel h4 {
+    font-size: 10px; color: rgba(255,255,255,0.4);
+    text-transform: uppercase; letter-spacing: 1px; margin-bottom: 12px;
+  }
+
+  .funnel-row {
+    display: flex; justify-content: space-between;
+    padding: 5px 0; color: rgba(255,255,255,0.6);
+  }
+
+  .funnel-row .count {
+    font-family: var(--font-mono); color: var(--accent-light); font-weight: 600;
+  }
+
+  /* Animations */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(16px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.4; }
+  }
+
+  /* Responsive */
+  @media (max-width: 700px) {
+    nav { padding: 12px 16px; }
+    .hero { padding: 120px 20px 60px; }
+    .pain-grid, .how-steps, .agent-cards { grid-template-columns: 1fr; }
+    .pricing-cards { grid-template-columns: 1fr; }
+    .row-2 { grid-template-columns: 1fr; }
+    .pain-section, .how-section, .demo-section, .agents-section, .onboarding-section { padding: 60px 20px; }
+    .btn-row { grid-template-columns: 1fr 1fr; }
+    .ty-share-row { flex-wrap: wrap; }
+    .ty-position .pos-num { font-size: 22px; }
+  }
+</style>
+<!-- Meta Pixel Code -->
+<script>
+  !function(f,b,e,v,n,t,s)
+  {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+  n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+  if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+  n.queue=[];t=b.createElement(e);t.async=!0;
+  t.src=v;s=b.getElementsByTagName(e)[0];
+  s.parentNode.insertBefore(t,s)}(window, document,'script',
+  'https://connect.facebook.net/en_US/fbevents.js');
+  fbq('init', 'YOUR_PIXEL_ID');  // ← Replace with your Meta Pixel ID
+  fbq('track', 'PageView');
+</script>
+<noscript><img height="1" width="1" style="display:none"
+  src="https://www.facebook.com/tr?id=YOUR_PIXEL_ID&ev=PageView&noscript=1" /></noscript>
+<!-- End Meta Pixel Code -->
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-brand">
+    <div class="nav-logo">↻</div>
+    <div class="nav-name">InnerLoop</div>
+    <div class="nav-tag">Coming Soon</div>
+  </div>
+  <button class="nav-cta" onclick="scrollTo_()">Get early access</button>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-eyebrow">
+    <div class="pulse-dot"></div>
+    Early access — limited spots available
+  </div>
+  <h1>You skim 12 newsletters a week. You remember <em>none of them.</em></h1>
+  <p class="hero-sub">InnerLoop reads everything so you don't have to. One personalized intelligence brief every Monday — filtered for your role, industry, and what you actually need to act on.</p>
+  <div class="hero-cta-group">
+    <button class="cta-main" onclick="scrollTo_()">Get my first brief free →</button>
+    <button class="cta-ghost" onclick="document.querySelector('.demo-section').scrollIntoView({behavior:'smooth'})">See a sample brief</button>
+  </div>
+  <div class="hero-proof">
+    <div class="mini-avatars">
+      <div class="mini-avatar" style="background:#C84B31">PS</div>
+      <div class="mini-avatar" style="background:#2563EB">AK</div>
+      <div class="mini-avatar" style="background:#2D8A4E">RN</div>
+      <div class="mini-avatar" style="background:#B8860B">VT</div>
+      <div class="mini-avatar" style="background:#7C3AED">SM</div>
+    </div>
+    <span class="hero-proof-text"><strong id="waitlist-count">127</strong> professionals signed up this month</span>
+  </div>
+</section>
+
+<!-- PAIN -->
+<section class="pain-section">
+  <div class="pain-inner">
+    <h2>Your mornings shouldn't feel like homework</h2>
+    <p class="pain-subtitle">You're a senior professional. Your time is worth ₹5,000/hour. Here's where it's going instead.</p>
+    <div class="pain-grid">
+      <div class="pain-card">
+        <div class="pain-icon">📬</div>
+        <h3>Newsletter graveyard</h3>
+        <p>Morning Brew, The Ken, Finshots, Stratechery... You subscribed to 12. You skim 3. You act on zero.</p>
+        <span class="time-waste">~4 hrs/week wasted</span>
+      </div>
+      <div class="pain-card">
+        <div class="pain-icon">🤷</div>
+        <h3>Caught off guard</h3>
+        <p>"Did you see the new RBI circular?" You didn't. Now you're nodding along pretending you did. Again.</p>
+        <span class="time-waste">credibility at stake</span>
+      </div>
+      <div class="pain-card">
+        <div class="pain-icon">👻</div>
+        <h3>LinkedIn guilt</h3>
+        <p>You know you should post. You have opinions. But turning news into a thoughtful take takes 45 minutes you don't have.</p>
+        <span class="time-waste">~2 hrs/week if you try</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- HOW IT WORKS -->
+<section class="how-section">
+  <h2>How InnerLoop works</h2>
+  <div class="how-steps">
+    <div class="how-step">
+      <div class="how-num">1</div>
+      <h3>Tell us who you are</h3>
+      <p>Your role, industry, seniority, and what signals matter. 60 seconds.</p>
+    </div>
+    <div class="how-step">
+      <div class="how-num">2</div>
+      <h3>AI agents collect & filter</h3>
+      <p>We scan hundreds of sources and personalize for <em>your</em> specific context.</p>
+    </div>
+    <div class="how-step">
+      <div class="how-num">3</div>
+      <h3>Read. Act. Move on.</h3>
+      <p>Monday 8 AM. One brief. Clear takeaways. One-click actions to write, prep, or explore.</p>
+    </div>
+  </div>
+</section>
+
+<!-- BRIEF DEMO -->
+<section class="demo-section">
+  <div class="demo-inner">
+    <h2>This is what Monday morning looks like</h2>
+    <p class="demo-subtitle">A sample brief for a Product Manager at a Series B fintech in Bangalore</p>
+    <div class="demo-brief">
+      <div class="demo-brief-header">
+        <div>
+          <div class="demo-brief-meta">Monday, March 2, 2026 · Week #9</div>
+          <div class="demo-brief-for">Curated for <strong>Priya</strong> · Product Manager · Fintech</div>
+        </div>
+        <div class="demo-brief-badge">Sample</div>
+      </div>
+      <div class="demo-section-block">
+        <div class="demo-section-label"><span class="dot" style="background:var(--accent-light)"></span>Top signals this week</div>
+        <div class="demo-item">
+          <div class="demo-signal">📜</div>
+          <div class="demo-content">
+            <h4>RBI tightens digital lending norms — FLDG caps reduced to 2%</h4>
+            <p>Direct impact on BNPL and co-lending models. Compliance teams at Series B+ fintechs need to restructure.</p>
+            <div class="demo-action-tag">📋 Draft compliance brief →</div>
+          </div>
+        </div>
+        <div class="demo-item">
+          <div class="demo-signal">💰</div>
+          <div class="demo-content">
+            <h4>Razorpay acquires BaaS startup for $42M</h4>
+            <p>Third acquisition in payments infra this quarter. Consolidation accelerating.</p>
+            <div class="demo-action-tag">✍️ Write a LinkedIn take →</div>
+          </div>
+        </div>
+        <div class="demo-item">
+          <div class="demo-signal">📊</div>
+          <div class="demo-content">
+            <h4>UPI crosses 14B monthly transactions — B2B payments surging</h4>
+            <p>Growth shifting from P2P to merchant/B2B. New API integrations opening up.</p>
+            <div class="demo-action-tag">🛠️ Explore PoC idea →</div>
+          </div>
+        </div>
+      </div>
+      <div class="demo-blur-block">
+        <div class="demo-blur-inner">
+          <div class="demo-section-label"><span class="dot" style="background:#60A5FA"></span>Curated for your role</div>
+          <div class="demo-item">
+            <div class="demo-signal">💼</div>
+            <div class="demo-content">
+              <h4>12 Senior PM roles at top Bangalore fintechs</h4>
+              <p>Filtered for your seniority and function.</p>
+            </div>
+          </div>
+          <div class="demo-item">
+            <div class="demo-signal">🎯</div>
+            <div class="demo-content">
+              <h4>Meeting prep: Q1 review with leadership</h4>
+              <p>Key data points and talking points ready.</p>
+            </div>
+          </div>
+        </div>
+        <div class="demo-unlock">
+          <div class="demo-unlock-text">+ 3 more personalized sections</div>
+          <div class="demo-unlock-cta" onclick="scrollTo_()">Sign up to unlock →</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- AGENTS -->
+<section class="agents-section">
+  <div class="agents-inner">
+    <h2>Read the brief. Then act on it.</h2>
+    <p class="agents-subtitle">Every insight comes with AI-powered actions you can trigger in one click.</p>
+    <div class="agent-cards">
+      <div class="agent-card">
+        <div class="agent-card-icon" style="background:var(--accent-bg)">✍️</div>
+        <h3>LinkedIn Post Agent</h3>
+        <p>Turn any brief insight into a polished post in your voice. Pick a signal, choose your angle, publish.</p>
+        <div class="agent-example">"Write a take on the RBI ruling from a product leader's perspective"</div>
+      </div>
+      <div class="agent-card">
+        <div class="agent-card-icon" style="background:var(--blue-bg)">🔍</div>
+        <h3>Job Search Agent</h3>
+        <p>Passive job monitoring by location, seniority, function, and target companies. Stay informed without the effort.</p>
+        <div class="agent-example">"VP Product roles at Series C+ fintechs in Bangalore & Mumbai"</div>
+      </div>
+      <div class="agent-card">
+        <div class="agent-card-icon" style="background:var(--green-bg)">🛠️</div>
+        <h3>PoC Builder Agent</h3>
+        <p>Spotted an opportunity? Go from "interesting" to a working first step — sizing, scan, or prototype plan.</p>
+        <div class="agent-example">"Size the B2B UPI opportunity for mid-market SaaS"</div>
+      </div>
+      <div class="agent-card">
+        <div class="agent-card-icon" style="background:var(--gold-bg)">📋</div>
+        <h3>Meeting Prep Agent</h3>
+        <p>Syncs with your calendar. Pulls relevant data, competitor updates, and talking points automatically.</p>
+        <div class="agent-example">"Prep me for Thursday's board meeting"</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ONBOARDING / SIGNUP -->
+<section class="onboarding-section" id="onboarding">
+  <div class="onboarding-inner">
+
+    <!-- Progress -->
+    <div class="ob-progress">
+      <div class="ob-steps">
+        <div class="ob-dot active" id="od-1">1</div>
+        <div class="ob-line" id="ol-1"></div>
+        <div class="ob-dot" id="od-2">2</div>
+        <div class="ob-line" id="ol-2"></div>
+        <div class="ob-dot" id="od-3">✓</div>
+      </div>
+      <div class="ob-labels">
+        <span class="ob-label active" id="olbl-1">Your profile</span>
+        <span class="ob-label" id="olbl-2">Interests</span>
+        <span class="ob-label" id="olbl-3">You're in</span>
+      </div>
+    </div>
+
+    <!-- PAGE 1: Profile -->
+    <div class="ob-page active" id="obp-1">
+      <h2 class="ob-title">Set up your brief in 60 seconds</h2>
+      <p class="ob-subtitle">Tell us about yourself so we can personalize your weekly intelligence brief.</p>
+
+      <div class="field">
+        <label>Full Name</label>
+        <input type="text" id="ob-name" placeholder="e.g. Priya Sharma">
+      </div>
+      <div class="field">
+        <label>Work Email</label>
+        <input type="email" id="ob-email" placeholder="you@company.com">
+      </div>
+      <div class="row-2">
+        <div class="field">
+          <label>Location</label>
+          <select id="ob-location">
+            <option value="">Select</option>
+            <option>Bangalore</option>
+            <option>Mumbai</option>
+            <option>Delhi NCR</option>
+            <option>Hyderabad</option>
+            <option>Pune</option>
+            <option>Chennai</option>
+            <option>SF Bay Area</option>
+            <option>New York</option>
+            <option>Seattle</option>
+            <option>Boston</option>
+            <option>Austin</option>
+            <option>London</option>
+            <option>Singapore</option>
+            <option>Other</option>
+          </select>
+        </div>
+        <div class="field">
+          <label>Seniority</label>
+          <select id="ob-seniority">
+            <option value="">Select</option>
+            <option>IC / Individual Contributor</option>
+            <option>Manager</option>
+            <option>Senior Manager / Director</option>
+            <option>VP / SVP</option>
+            <option>CXO / Founder</option>
+          </select>
+        </div>
+      </div>
+      <div class="row-2">
+        <div class="field">
+          <label>Function</label>
+          <select id="ob-function">
+            <option value="">Select</option>
+            <option>Product Management</option>
+            <option>Engineering</option>
+            <option>Strategy / BizOps</option>
+            <option>Growth / Marketing</option>
+            <option>Sales / BD</option>
+            <option>Finance / Ops</option>
+            <option>Design</option>
+            <option>Data / Analytics</option>
+            <option>Founder / General Mgmt</option>
+            <option>Consulting</option>
+          </select>
+        </div>
+        <div class="field">
+          <label>Company Stage</label>
+          <select id="ob-stage">
+            <option value="">Select</option>
+            <option>Pre-seed / Seed</option>
+            <option>Series A-B</option>
+            <option>Series C+ / Late</option>
+            <option>Public / MNC</option>
+            <option>Consulting / Services</option>
+          </select>
+        </div>
+      </div>
+      <div class="field">
+        <label>Alumni Network <span style="font-weight:400;text-transform:none;color:var(--ink-faint)">(optional)</span></label>
+        <div class="chips" id="ob-alumni">
+          <div class="chip" data-v="IIM A">IIM A</div>
+          <div class="chip" data-v="IIM B">IIM B</div>
+          <div class="chip" data-v="IIM C">IIM C</div>
+          <div class="chip" data-v="ISB">ISB</div>
+          <div class="chip" data-v="IIT">IIT</div>
+          <div class="chip" data-v="BITS">BITS</div>
+          <div class="chip" data-v="HBS">HBS</div>
+          <div class="chip" data-v="Wharton">Wharton</div>
+          <div class="chip" data-v="Stanford">Stanford</div>
+          <div class="chip" data-v="Kellogg">Kellogg</div>
+          <div class="chip" data-v="Other">Other</div>
+        </div>
+      </div>
+
+      <button class="btn-primary" onclick="obGo(2)">Continue →</button>
+    </div>
+
+    <!-- PAGE 2: Interests -->
+    <div class="ob-page" id="obp-2">
+      <h2 class="ob-title">What should your brief cover?</h2>
+      <p class="ob-subtitle">Pick your industry and the signals that matter most. This personalizes your brief.</p>
+
+      <div class="field">
+        <label>Your Industry</label>
+        <div class="chips" id="ob-industry">
+          <div class="chip" data-v="Fintech / BFSI">Fintech / BFSI</div>
+          <div class="chip" data-v="Enterprise SaaS">Enterprise SaaS</div>
+          <div class="chip" data-v="Consumer Tech">Consumer Tech</div>
+          <div class="chip" data-v="E-commerce / D2C">E-commerce / D2C</div>
+          <div class="chip" data-v="Healthtech">Healthtech</div>
+          <div class="chip" data-v="Edtech">Edtech</div>
+          <div class="chip" data-v="Climate / Energy">Climate / Energy</div>
+          <div class="chip" data-v="AI / ML">AI / ML</div>
+          <div class="chip" data-v="Consulting">Consulting</div>
+        </div>
+      </div>
+
+      <div class="field">
+        <label>Signals to track</label>
+        <div class="chips" id="ob-signals">
+          <div class="chip" data-v="Funding rounds">💰 Funding rounds</div>
+          <div class="chip" data-v="M&A">🤝 M&A activity</div>
+          <div class="chip" data-v="Regulatory">📜 Regulatory changes</div>
+          <div class="chip" data-v="Product launches">🚀 Product launches</div>
+          <div class="chip" data-v="Leadership moves">👤 Leadership moves</div>
+          <div class="chip" data-v="Market trends">📊 Market trends</div>
+          <div class="chip" data-v="Job market">💼 Job market shifts</div>
+          <div class="chip" data-v="Tech breakthroughs">⚡ Tech breakthroughs</div>
+        </div>
+      </div>
+
+      <div class="field">
+        <label>What actions would be most useful?</label>
+        <div class="chips" id="ob-actions">
+          <div class="chip" data-v="LinkedIn posts">✍️ Write LinkedIn posts</div>
+          <div class="chip" data-v="Meeting prep">📋 Prep for meetings</div>
+          <div class="chip" data-v="Job search">🔍 Explore opportunities</div>
+          <div class="chip" data-v="Build PoC">🛠️ Build a quick PoC</div>
+          <div class="chip" data-v="Share with team">📤 Share with my team</div>
+        </div>
+      </div>
+
+      <div class="btn-row">
+        <button class="btn-secondary" onclick="obGo(1)">← Back</button>
+        <button class="btn-primary" onclick="submitWaitlist()">Get my first brief →</button>
+      </div>
+    </div>
+
+    <!-- PAGE 3: Thank You — the reveal -->
+    <div class="ob-page" id="obp-3">
+      <div class="ty-container">
+        <div class="ty-icon">✓</div>
+        <h2 class="ty-title">You're in, <span id="ty-name">friend</span>!</h2>
+        <p class="ty-message">
+          Thank you for signing up for InnerLoop. We're putting the finishing touches on your personalized brief experience and want to make sure it's perfect before we go live.<br><br>
+          <strong>We'll personally reach out to you</strong> as soon as your brief is ready. Early sign-ups get first access and founding member pricing.
+        </p>
+
+        <div class="ty-position">
+          <span>You're #</span>
+          <span class="pos-num" id="ty-position">—</span>
+          <span>in line</span>
+        </div>
+
+        <div class="ty-card">
+          <div class="ty-card-title">Your Profile</div>
+          <div id="ty-details"></div>
+        </div>
+
+        <div class="ty-what-next">
+          <h3>📍 What happens next</h3>
+          <div class="ty-timeline">
+            <div class="ty-timeline-item">
+              <div class="tl-label">Now</div>
+              <div class="tl-text">We've saved your preferences and are building your personalized brief.</div>
+            </div>
+            <div class="ty-timeline-item">
+              <div class="tl-label">Coming soon</div>
+              <div class="tl-text">We'll send you a sample brief based on your profile — so you can see exactly what Monday mornings will look like.</div>
+            </div>
+            <div class="ty-timeline-item">
+              <div class="tl-label">Launch</div>
+              <div class="tl-text">You'll be among the first to get full access. We'll email you the moment it's ready.</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="ty-share-section">
+          <p class="ty-share-text">Know someone who'd love this? Share InnerLoop with them.</p>
+          <div class="ty-share-row">
+            <button class="ty-share-btn wa" onclick="shareWA()">💬 WhatsApp</button>
+            <button class="ty-share-btn li" onclick="shareLI()">💼 LinkedIn</button>
+            <button class="ty-share-btn tw" onclick="shareTW()">𝕏 Twitter</button>
+            <button class="ty-share-btn cp" onclick="copyLink()">🔗 Copy link</button>
+          </div>
+        </div>
+
+        <p class="ty-footer">
+          Questions? Reach out at <a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="59313c353536193037373c2b35363629773830">[email&#160;protected]</a> — we read every message.
+        </p>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- FUNNEL -->
+<button class="funnel-toggle" id="funnel-btn" style="display:none" onclick="document.getElementById('fp').classList.toggle('visible')">📊 Funnel</button>
+<div class="funnel-panel" id="fp">
+  <h4>Conversion Funnel</h4>
+  <div class="funnel-row"><span>Page views</span><span class="count" id="fc-views">0</span></div>
+  <div class="funnel-row"><span>Clicked CTA</span><span class="count" id="fc-cta">0</span></div>
+  <div class="funnel-row"><span>Profile done</span><span class="count" id="fc-profile">0</span></div>
+  <div class="funnel-row"><span>Signed up</span><span class="count" id="fc-joined">0</span></div>
+  <div class="funnel-row"><span>Shared link</span><span class="count" id="fc-shared">0</span></div>
+</div>
+
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+  // ============================================================
+  // CONFIG — Replace these with your actual values
+  // ============================================================
+  const GOOGLE_SHEETS_URL = 'https://script.google.com/macros/s/AKfycbyJMRILrGh_tO-OJ8RNXVYvBfd2Qy1KzIVFlx9xWELxK1-0eovbnmx7h7cKtp1ZM23H/exec';
+  const PAGE_VARIANT = 'India';  // Which geo variant this page is
+
+  // ============================================================
+  // UTM CAPTURE — grabs utm_source, utm_medium, utm_campaign, etc.
+  // ============================================================
+  function getUTMs() {
+    const params = new URLSearchParams(window.location.search);
+    return {
+      utm_source: params.get('utm_source') || '',
+      utm_medium: params.get('utm_medium') || '',
+      utm_campaign: params.get('utm_campaign') || '',
+      utm_content: params.get('utm_content') || '',
+      utm_term: params.get('utm_term') || '',
+    };
+  }
+  const utms = getUTMs();
+
+  // ============================================================
+  // FUNNEL STATE
+  // ============================================================
+  let obStep = 1;
+  const f = { views: 0, cta: 0, profile: 0, joined: 0, shared: 0 };
+  try { Object.assign(f, JSON.parse(sessionStorage.getItem('ilfunnel'))); } catch(e) {}
+  f.views++;
+  saveF();
+
+  function saveF() {
+    try { sessionStorage.setItem('ilfunnel', JSON.stringify(f)); } catch(e) {}
+    document.getElementById('fc-views').textContent = f.views;
+    document.getElementById('fc-cta').textContent = f.cta;
+    document.getElementById('fc-profile').textContent = f.profile;
+    document.getElementById('fc-joined').textContent = f.joined;
+    document.getElementById('fc-shared').textContent = f.shared;
+  }
+
+  // ============================================================
+  // SECRET FUNNEL TOGGLE — press Ctrl+Shift+F to show/hide
+  // ============================================================
+  document.addEventListener('keydown', (e) => {
+    if (e.ctrlKey && e.shiftKey && e.key === 'F') {
+      const btn = document.getElementById('funnel-btn');
+      btn.style.display = btn.style.display === 'none' ? 'block' : 'none';
+    }
+  });
+
+  // ============================================================
+  // CHIPS
+  // ============================================================
+  document.querySelectorAll('.chips .chip').forEach(c => {
+    c.addEventListener('click', () => c.classList.toggle('selected'));
+  });
+
+  function getChips(id) {
+    return [...document.querySelectorAll(`#${id} .chip.selected`)].map(c => c.dataset.v);
+  }
+
+  // ============================================================
+  // SCROLL TO SIGNUP — fires Meta Pixel InitiateCheckout
+  // ============================================================
+  function scrollTo_() {
+    f.cta++;
+    saveF();
+    if (typeof fbq !== 'undefined') fbq('track', 'InitiateCheckout');
+    document.getElementById('onboarding').scrollIntoView({ behavior: 'smooth' });
+  }
+
+  // ============================================================
+  // STEP NAVIGATION
+  // ============================================================
+  function obGo(step) {
+    if (step === 2 && obStep === 1) {
+      f.profile++;
+      if (typeof fbq !== 'undefined') fbq('track', 'AddToCart');  // Profile step completed
+    }
+    saveF();
+
+    document.getElementById(`obp-${obStep}`).classList.remove('active');
+    document.getElementById(`obp-${step}`).classList.add('active');
+
+    for (let i = 1; i <= 3; i++) {
+      const dot = document.getElementById(`od-${i}`);
+      const lbl = document.getElementById(`olbl-${i}`);
+      dot.classList.remove('active', 'done');
+      lbl.classList.remove('active', 'done');
+      if (i < step) { dot.classList.add('done'); dot.innerHTML = '✓'; lbl.classList.add('done'); }
+      else if (i === step) { dot.classList.add('active'); lbl.classList.add('active'); }
+      if (i < 3) document.getElementById(`ol-${i}`).classList.toggle('filled', i < step);
+    }
+
+    obStep = step;
+    document.getElementById('onboarding').scrollIntoView({ behavior: 'smooth' });
+  }
+
+  // ============================================================
+  // SUBMIT — Google Sheets + Meta Pixel Lead event
+  // ============================================================
+  function submitWaitlist() {
+    const submitBtn = document.querySelector('#obp-2 .btn-primary');
+    const origText = submitBtn.textContent;
+    submitBtn.textContent = 'Saving...';
+    submitBtn.disabled = true;
+
+    f.joined++;
+    saveF();
+
+    const name = document.getElementById('ob-name').value || 'Friend';
+    const email = document.getElementById('ob-email').value || '—';
+    const loc = document.getElementById('ob-location').value || '—';
+    const seniority = document.getElementById('ob-seniority').value || '—';
+    const func = document.getElementById('ob-function').value || '—';
+    const stage = document.getElementById('ob-stage').value || '—';
+    const alumni = getChips('ob-alumni').join(', ') || '—';
+    const industries = getChips('ob-industry').join(', ') || '—';
+    const signals = getChips('ob-signals').join(', ') || '—';
+    const actions = getChips('ob-actions').join(', ') || '—';
+    const position = Math.floor(Math.random() * 40) + 128;
+
+    // ---- Populate thank-you page ----
+    document.getElementById('ty-name').textContent = name.split(' ')[0];
+    document.getElementById('ty-position').textContent = `#${position}`;
+    document.getElementById('ty-details').innerHTML = `
+      <div class="ty-row"><span class="lbl">Email</span><span class="val">${email}</span></div>
+      <div class="ty-row"><span class="lbl">Location</span><span class="val">${loc}</span></div>
+      <div class="ty-row"><span class="lbl">Role</span><span class="val">${func} · ${seniority}</span></div>
+      <div class="ty-row"><span class="lbl">Company stage</span><span class="val">${stage}</span></div>
+      <div class="ty-row"><span class="lbl">Industries</span><span class="val">${industries}</span></div>
+      <div class="ty-row"><span class="lbl">Top signals</span><span class="val">${signals}</span></div>
+      <div class="ty-row"><span class="lbl">Actions wanted</span><span class="val">${actions}</span></div>
+    `;
+
+    // ---- Fire Meta Pixel Lead event ----
+    if (typeof fbq !== 'undefined') {
+      fbq('track', 'Lead', {
+        content_name: 'InnerLoop Waitlist',
+        content_category: PAGE_VARIANT,
+        value: 0,
+        currency: 'USD',
+      });
+    }
+
+    // ---- Send to Google Sheets via Apps Script Web App ----
+    const payload = {
+      name, email, location: loc, seniority, function: func,
+      company_stage: stage, alumni, industries, signals, actions,
+      position, variant: PAGE_VARIANT,
+      utm_source: utms.utm_source,
+      utm_medium: utms.utm_medium,
+      utm_campaign: utms.utm_campaign,
+      utm_content: utms.utm_content,
+      utm_term: utms.utm_term,
+      referrer: document.referrer,
+      timestamp: new Date().toISOString(),
+    };
+
+    if (GOOGLE_SHEETS_URL && GOOGLE_SHEETS_URL !== 'YOUR_GOOGLE_SHEETS_WEBAPP_URL') {
+      fetch(GOOGLE_SHEETS_URL, {
+        method: 'POST',
+        mode: 'no-cors',  // Apps Script requires no-cors from browser
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload),
+      }).catch(err => console.warn('Sheet submission error:', err))
+        .finally(() => {
+          submitBtn.textContent = origText;
+          submitBtn.disabled = false;
+          obGo(3);
+        });
+    } else {
+      // No webhook configured — just log and proceed
+      console.log('📋 Waitlist signup (no webhook configured):', payload);
+      submitBtn.textContent = origText;
+      submitBtn.disabled = false;
+      obGo(3);
+    }
+  }
+
+  // ============================================================
+  // SHARING
+  // ============================================================
+  const shareText = "I just signed up for InnerLoop — an AI-powered weekly intelligence brief personalized for your role and industry. No more newsletter overload. Check it out:";
+  const shareUrl = window.location.href.split('?')[0];  // Clean URL without UTMs
+
+  function shareWA() {
+    f.shared++; saveF();
+    if (typeof fbq !== 'undefined') fbq('trackCustom', 'Share', { method: 'whatsapp' });
+    window.open(`https://wa.me/?text=${encodeURIComponent(shareText + ' ' + shareUrl)}`, '_blank');
+  }
+
+  function shareLI() {
+    f.shared++; saveF();
+    if (typeof fbq !== 'undefined') fbq('trackCustom', 'Share', { method: 'linkedin' });
+    window.open(`https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(shareUrl)}`, '_blank');
+  }
+
+  function shareTW() {
+    f.shared++; saveF();
+    if (typeof fbq !== 'undefined') fbq('trackCustom', 'Share', { method: 'twitter' });
+    window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(shareText)}&url=${encodeURIComponent(shareUrl)}`, '_blank');
+  }
+
+  function copyLink() {
+    f.shared++; saveF();
+    if (typeof fbq !== 'undefined') fbq('trackCustom', 'Share', { method: 'copy_link' });
+    navigator.clipboard.writ
