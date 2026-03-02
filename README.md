@@ -1,103 +1,69 @@
 # InnerLoop Landing Pages
 
-Geo-targeted landing pages for InnerLoop — AI-powered personalized intelligence briefs.
+Geo-targeted landing pages for InnerLoop — AI-powered weekly intelligence briefs.
 
 ## Structure
 
 ```
-/index.html     → India version (default)
-/in/index.html  → India version (explicit)
-/us/index.html  → US version
+/
+├── index.html        # Auto-redirects to /in/ or /us/ based on timezone
+├── in/index.html     # India landing page
+├── us/index.html     # US landing page
+├── vercel.json       # Vercel routing config
+└── README.md
 ```
 
-## URLs after deploy
+## URLs
 
-- `yoursite.vercel.app` → India page
-- `yoursite.vercel.app/in` → India page
-- `yoursite.vercel.app/us` → US page
+- `yoursite.com` → auto-redirects based on visitor timezone
+- `yoursite.com/in` → India page (use for India Instagram ads)
+- `yoursite.com/us` → US page (use for US Instagram ads)
 
 ## Deploy to Vercel
 
 ### Option 1: GitHub + Vercel (recommended)
 
-1. Push this repo to GitHub
-2. Go to [vercel.com](https://vercel.com) → "Add New Project"
-3. Import your GitHub repo
-4. Framework preset: **Other**
-5. Click Deploy — done
+1. Create a new GitHub repo:
+   ```
+   gh repo create innerloop-landing --public
+   git init
+   git add .
+   git commit -m "Initial landing pages"
+   git branch -M main
+   git remote add origin https://github.com/YOUR_USERNAME/innerloop-landing.git
+   git push -u origin main
+   ```
+
+2. Go to [vercel.com](https://vercel.com), sign in with GitHub
+3. Click "New Project" → Import your `innerloop-landing` repo
+4. Deploy (zero config needed, vercel.json handles routing)
+5. You'll get: `innerloop-landing.vercel.app`
 
 ### Option 2: Vercel CLI
 
-```bash
+```
 npm i -g vercel
 cd innerloop-landing
 vercel
 ```
 
-## Instagram Ad Setup
+## Instagram Ad URLs
 
-Point your ad campaigns to:
-- **India campaign** → `yourdomain.com/in`
-- **US campaign** → `yourdomain.com/us`
+- **India campaign**: `https://your-domain.com/in`
+- **US campaign**: `https://your-domain.com/us`
 
-## Adding Google Sheets webhook
+Use separate UTM params for tracking:
+- India: `?utm_source=instagram&utm_campaign=india_launch`
+- US: `?utm_source=instagram&utm_campaign=us_launch`
 
-In each `index.html`, find the commented-out `fetch()` call in the `submitWaitlist()` function. Replace `YOUR_GOOGLE_SHEETS_WEBHOOK_URL` with your Google Apps Script web app URL.
+## Custom Domain
 
-### Setting up Google Sheets collection:
+1. In Vercel dashboard → Settings → Domains
+2. Add your domain (e.g., `getinnerloop.com`)
+3. Update DNS as instructed
 
-1. Create a new Google Sheet
-2. Go to Extensions → Apps Script
-3. Paste this code:
+## Next Steps
 
-```javascript
-function doPost(e) {
-  var sheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
-  var data = JSON.parse(e.postData.contents);
-  sheet.appendRow([
-    new Date(),
-    data.name,
-    data.email,
-    data.loc,
-    data.seniority,
-    data.func,
-    data.stage,
-    data.alumni,
-    data.industries,
-    data.signals,
-    data.actions,
-    data.position,
-    data.source
-  ]);
-  return ContentService.createTextOutput(
-    JSON.stringify({ status: 'ok' })
-  ).setMimeType(ContentService.MimeType.JSON);
-}
-```
-
-4. Deploy → New deployment → Web app → Anyone can access
-5. Copy the URL and paste it in both `index.html` files
-
-## Adding Meta Pixel
-
-Add this in the `<head>` of each page (replace `YOUR_PIXEL_ID`):
-
-```html
-<script>
-!function(f,b,e,v,n,t,s)
-{if(f.fbq)return;n=f.fbq=function(){n.callMethod?
-n.callMethod.apply(n,arguments):n.queue.push(arguments)};
-if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
-n.queue=[];t=b.createElement(e);t.async=!0;
-t.src=v;s=b.getElementsByTagName(e)[0];
-s.parentNode.insertBefore(t,s)}(window, document,'script',
-'https://connect.facebook.net/en_US/fbevents.js');
-fbq('init', 'YOUR_PIXEL_ID');
-fbq('track', 'PageView');
-</script>
-```
-
-Then add these events in the JavaScript:
-- On CTA click: `fbq('track', 'ViewContent');`
-- On profile complete: `fbq('track', 'Lead');`
-- On signup complete: `fbq('track', 'CompleteRegistration');`
+- [ ] Add Meta Pixel for Instagram ad tracking
+- [ ] Wire up Google Sheets webhook for signup data capture
+- [ ] Add UTM parameter tracking
