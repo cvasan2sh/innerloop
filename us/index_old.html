@@ -893,22 +893,6 @@
     .ty-position .pos-num { font-size: 22px; }
   }
 </style>
-<!-- Meta Pixel Code -->
-<script>
-  !function(f,b,e,v,n,t,s)
-  {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
-  n.callMethod.apply(n,arguments):n.queue.push(arguments)};
-  if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
-  n.queue=[];t=b.createElement(e);t.async=!0;
-  t.src=v;s=b.getElementsByTagName(e)[0];
-  s.parentNode.insertBefore(t,s)}(window, document,'script',
-  'https://connect.facebook.net/en_US/fbevents.js');
-  fbq('init', 'YOUR_PIXEL_ID');  // ← Replace with your Meta Pixel ID
-  fbq('track', 'PageView');
-</script>
-<noscript><img height="1" width="1" style="display:none"
-  src="https://www.facebook.com/tr?id=YOUR_PIXEL_ID&ev=PageView&noscript=1" /></noscript>
-<!-- End Meta Pixel Code -->
 </head>
 <body>
 
@@ -1317,7 +1301,7 @@
         </div>
 
         <p class="ty-footer">
-          Questions? Reach out at <a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="325a575e5e5d725b5c5c57405e5d5d421c535b">[email&#160;protected]</a> — we read every message.
+          Questions? Reach out at hello@innerloop.ai — we read every message.
         </p>
       </div>
     </div>
@@ -1326,7 +1310,7 @@
 </section>
 
 <!-- FUNNEL -->
-<button class="funnel-toggle" id="funnel-btn" style="display:none" onclick="document.getElementById('fp').classList.toggle('visible')">📊 Funnel</button>
+<button class="funnel-toggle" onclick="document.getElementById('fp').classList.toggle('visible')">📊 Funnel</button>
 <div class="funnel-panel" id="fp">
   <h4>Conversion Funnel</h4>
   <div class="funnel-row"><span>Page views</span><span class="count" id="fc-views">0</span></div>
@@ -1336,31 +1320,8 @@
   <div class="funnel-row"><span>Shared link</span><span class="count" id="fc-shared">0</span></div>
 </div>
 
-<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
-  // ============================================================
-  // CONFIG — Replace these with your actual values
-  // ============================================================
-  const GOOGLE_SHEETS_URL = 'https://script.google.com/macros/s/AKfycbyJMRILrGh_tO-OJ8RNXVYvBfd2Qy1KzIVFlx9xWELxK1-0eovbnmx7h7cKtp1ZM23H/exec';
-  const PAGE_VARIANT = 'US';  // Which geo variant this page is
-
-  // ============================================================
-  // UTM CAPTURE — grabs utm_source, utm_medium, utm_campaign, etc.
-  // ============================================================
-  function getUTMs() {
-    const params = new URLSearchParams(window.location.search);
-    return {
-      utm_source: params.get('utm_source') || '',
-      utm_medium: params.get('utm_medium') || '',
-      utm_campaign: params.get('utm_campaign') || '',
-      utm_content: params.get('utm_content') || '',
-      utm_term: params.get('utm_term') || '',
-    };
-  }
-  const utms = getUTMs();
-
-  // ============================================================
-  // FUNNEL STATE
-  // ============================================================
+<script>
+  // ===== STATE =====
   let obStep = 1;
   const f = { views: 0, cta: 0, profile: 0, joined: 0, shared: 0 };
   try { Object.assign(f, JSON.parse(sessionStorage.getItem('ilfunnel'))); } catch(e) {}
@@ -1376,19 +1337,7 @@
     document.getElementById('fc-shared').textContent = f.shared;
   }
 
-  // ============================================================
-  // SECRET FUNNEL TOGGLE — press Ctrl+Shift+F to show/hide
-  // ============================================================
-  document.addEventListener('keydown', (e) => {
-    if (e.ctrlKey && e.shiftKey && e.key === 'F') {
-      const btn = document.getElementById('funnel-btn');
-      btn.style.display = btn.style.display === 'none' ? 'block' : 'none';
-    }
-  });
-
-  // ============================================================
-  // CHIPS
-  // ============================================================
+  // ===== CHIPS =====
   document.querySelectorAll('.chips .chip').forEach(c => {
     c.addEventListener('click', () => c.classList.toggle('selected'));
   });
@@ -1397,24 +1346,16 @@
     return [...document.querySelectorAll(`#${id} .chip.selected`)].map(c => c.dataset.v);
   }
 
-  // ============================================================
-  // SCROLL TO SIGNUP — fires Meta Pixel InitiateCheckout
-  // ============================================================
+  // ===== SCROLL =====
   function scrollTo_() {
     f.cta++;
     saveF();
-    if (typeof fbq !== 'undefined') fbq('track', 'InitiateCheckout');
     document.getElementById('onboarding').scrollIntoView({ behavior: 'smooth' });
   }
 
-  // ============================================================
-  // STEP NAVIGATION
-  // ============================================================
+  // ===== NAV =====
   function obGo(step) {
-    if (step === 2 && obStep === 1) {
-      f.profile++;
-      if (typeof fbq !== 'undefined') fbq('track', 'AddToCart');  // Profile step completed
-    }
+    if (step === 2 && obStep === 1) f.profile++;
     saveF();
 
     document.getElementById(`obp-${obStep}`).classList.remove('active');
@@ -1434,15 +1375,8 @@
     document.getElementById('onboarding').scrollIntoView({ behavior: 'smooth' });
   }
 
-  // ============================================================
-  // SUBMIT — Google Sheets + Meta Pixel Lead event
-  // ============================================================
+  // ===== SUBMIT SIGNUP =====
   function submitWaitlist() {
-    const submitBtn = document.querySelector('#obp-2 .btn-primary');
-    const origText = submitBtn.textContent;
-    submitBtn.textContent = 'Saving...';
-    submitBtn.disabled = true;
-
     f.joined++;
     saveF();
 
@@ -1456,11 +1390,13 @@
     const industries = getChips('ob-industry').join(', ') || '—';
     const signals = getChips('ob-signals').join(', ') || '—';
     const actions = getChips('ob-actions').join(', ') || '—';
+
+    // Simulate position
     const position = Math.floor(Math.random() * 40) + 128;
 
-    // ---- Populate thank-you page ----
     document.getElementById('ty-name').textContent = name.split(' ')[0];
     document.getElementById('ty-position').textContent = `#${position}`;
+
     document.getElementById('ty-details').innerHTML = `
       <div class="ty-row"><span class="lbl">Email</span><span class="val">${email}</span></div>
       <div class="ty-row"><span class="lbl">Location</span><span class="val">${loc}</span></div>
@@ -1471,80 +1407,44 @@
       <div class="ty-row"><span class="lbl">Actions wanted</span><span class="val">${actions}</span></div>
     `;
 
-    // ---- Fire Meta Pixel Lead event ----
-    if (typeof fbq !== 'undefined') {
-      fbq('track', 'Lead', {
-        content_name: 'InnerLoop Waitlist',
-        content_category: PAGE_VARIANT,
-        value: 0,
-        currency: 'USD',
-      });
-    }
+    // Send to Google Sheets (placeholder - replace with your webhook URL)
+    // fetch('YOUR_GOOGLE_SHEETS_WEBHOOK_URL', {
+    //   method: 'POST',
+    //   body: JSON.stringify({ name, email, loc, seniority, func, stage, alumni, industries, signals, actions, position, timestamp: new Date().toISOString() })
+    // });
 
-    // ---- Send to Google Sheets via Apps Script Web App ----
-    const payload = {
-      name, email, location: loc, seniority, function: func,
-      company_stage: stage, alumni, industries, signals, actions,
-      position, variant: PAGE_VARIANT,
-      utm_source: utms.utm_source,
-      utm_medium: utms.utm_medium,
-      utm_campaign: utms.utm_campaign,
-      utm_content: utms.utm_content,
-      utm_term: utms.utm_term,
-      referrer: document.referrer,
-      timestamp: new Date().toISOString(),
-    };
-
-    if (GOOGLE_SHEETS_URL && GOOGLE_SHEETS_URL !== 'YOUR_GOOGLE_SHEETS_WEBAPP_URL') {
-      // Apps Script approach: send as form data to avoid CORS issues
-      const formData = new URLSearchParams();
-      Object.entries(payload).forEach(([k, v]) => formData.append(k, v));
-
-      fetch(GOOGLE_SHEETS_URL, {
-        method: 'POST',
-        body: formData,
-      }).then(res => {
-        console.log('✅ Sheet submission sent');
-      }).catch(err => console.warn('Sheet submission error:', err))
-        .finally(() => {
-          submitBtn.textContent = origText;
-          submitBtn.disabled = false;
-          obGo(3);
-        });
-    } else {
-      // No webhook configured — just log and proceed
-      console.log('📋 Waitlist signup (no webhook configured):', payload);
-      submitBtn.textContent = origText;
-      submitBtn.disabled = false;
-      obGo(3);
-    }
+    obGo(3);
   }
 
-  // ============================================================
-  // SHARING
-  // ============================================================
+  // ===== SHARING =====
   const shareText = "I just signed up for InnerLoop — an AI-powered weekly intelligence brief personalized for your role and industry. No more newsletter overload. Check it out:";
-  const shareUrl = window.location.href.split('?')[0];  // Clean URL without UTMs
+  const shareUrl = window.location.href;
 
   function shareWA() {
     f.shared++; saveF();
-    if (typeof fbq !== 'undefined') fbq('trackCustom', 'Share', { method: 'whatsapp' });
     window.open(`https://wa.me/?text=${encodeURIComponent(shareText + ' ' + shareUrl)}`, '_blank');
   }
 
   function shareLI() {
     f.shared++; saveF();
-    if (typeof fbq !== 'undefined') fbq('trackCustom', 'Share', { method: 'linkedin' });
     window.open(`https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(shareUrl)}`, '_blank');
   }
 
   function shareTW() {
     f.shared++; saveF();
-    if (typeof fbq !== 'undefined') fbq('trackCustom', 'Share', { method: 'twitter' });
     window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(shareText)}&url=${encodeURIComponent(shareUrl)}`, '_blank');
   }
 
   function copyLink() {
     f.shared++; saveF();
-    if (typeof fbq !== 'undefined') fbq('trackCustom', 'Share', { method: 'copy_link' });
-    navigator.clipboard.writ
+    navigator.clipboard.writeText(shareUrl).then(() => {
+      const btn = event.target;
+      const orig = btn.textContent;
+      btn.textContent = '✓ Copied!';
+      setTimeout(() => btn.textContent = orig, 2000);
+    });
+  }
+</script>
+
+</body>
+</html>
