@@ -1547,4 +1547,14 @@
   function copyLink() {
     f.shared++; saveF();
     if (typeof fbq !== 'undefined') fbq('trackCustom', 'Share', { method: 'copy_link' });
-    navigator.clipboard.writ
+    navigator.clipboard.writeText(shareUrl).then(() => {
+      const btn = event.target;
+      const orig = btn.textContent;
+      btn.textContent = '✓ Copied!';
+      setTimeout(() => btn.textContent = orig, 2000);
+    });
+  }
+</script>
+
+</body>
+</html>
