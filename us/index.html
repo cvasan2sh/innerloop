@@ -903,7 +903,7 @@
   t.src=v;s=b.getElementsByTagName(e)[0];
   s.parentNode.insertBefore(t,s)}(window, document,'script',
   'https://connect.facebook.net/en_US/fbevents.js');
-  fbq('init', 'YOUR_PIXEL_ID');  // ← Replace with your Meta Pixel ID
+  fbq('init', 'YOUR_PIXEL_ID');
   fbq('track', 'PageView');
 </script>
 <noscript><img height="1" width="1" style="display:none"
@@ -1317,7 +1317,7 @@
         </div>
 
         <p class="ty-footer">
-          Questions? Reach out at <a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="1179747d7d7e51787f7f74637d7e7e613f7078">[email&#160;protected]</a> — we read every message.
+          Questions? Reach out at hello@innerloop.ai — we read every message.
         </p>
       </div>
     </div>
@@ -1336,33 +1336,33 @@
   <div class="funnel-row"><span>Shared link</span><span class="count" id="fc-shared">0</span></div>
 </div>
 
-<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+<script>
   // ============================================================
-  // CONFIG — Replace these with your actual values
+  // CONFIG
   // ============================================================
-  const GOOGLE_SHEETS_URL = 'https://script.google.com/macros/s/AKfycbwWaIYVQx34FF0i9O_JU0hImNT-DoRMVltN340AJPnlj8jm5CMH_PireoBGfXj9EKg1/exec';
-  const PAGE_VARIANT = 'US';  // Which geo variant this page is
+  var GOOGLE_SHEETS_URL = 'https://script.google.com/macros/s/AKfycbwWaIYVQx34FF0i9O_JU0hImNT-DoRMVltN340AJPnlj8jm5CMH_PireoBGfXj9EKg1/exec';
+  var PAGE_VARIANT = 'US';
 
   // ============================================================
-  // UTM CAPTURE — grabs utm_source, utm_medium, utm_campaign, etc.
+  // UTM CAPTURE
   // ============================================================
   function getUTMs() {
-    const params = new URLSearchParams(window.location.search);
+    var params = new URLSearchParams(window.location.search);
     return {
       utm_source: params.get('utm_source') || '',
       utm_medium: params.get('utm_medium') || '',
       utm_campaign: params.get('utm_campaign') || '',
       utm_content: params.get('utm_content') || '',
-      utm_term: params.get('utm_term') || '',
+      utm_term: params.get('utm_term') || ''
     };
   }
-  const utms = getUTMs();
+  var utms = getUTMs();
 
   // ============================================================
   // FUNNEL STATE
   // ============================================================
-  let obStep = 1;
-  const f = { views: 0, cta: 0, profile: 0, joined: 0, shared: 0 };
+  var obStep = 1;
+  var f = { views: 0, cta: 0, profile: 0, joined: 0, shared: 0 };
   try { Object.assign(f, JSON.parse(sessionStorage.getItem('ilfunnel'))); } catch(e) {}
   f.views++;
   saveF();
@@ -1376,12 +1376,10 @@
     document.getElementById('fc-shared').textContent = f.shared;
   }
 
-  // ============================================================
-  // SECRET FUNNEL TOGGLE — press Ctrl+Shift+F to show/hide
-  // ============================================================
-  document.addEventListener('keydown', (e) => {
+  // Secret funnel toggle: Ctrl+Shift+F
+  document.addEventListener('keydown', function(e) {
     if (e.ctrlKey && e.shiftKey && e.key === 'F') {
-      const btn = document.getElementById('funnel-btn');
+      var btn = document.getElementById('funnel-btn');
       btn.style.display = btn.style.display === 'none' ? 'block' : 'none';
     }
   });
@@ -1389,16 +1387,16 @@
   // ============================================================
   // CHIPS
   // ============================================================
-  document.querySelectorAll('.chips .chip').forEach(c => {
-    c.addEventListener('click', () => c.classList.toggle('selected'));
+  document.querySelectorAll('.chips .chip').forEach(function(c) {
+    c.addEventListener('click', function() { c.classList.toggle('selected'); });
   });
 
   function getChips(id) {
-    return [...document.querySelectorAll(`#${id} .chip.selected`)].map(c => c.dataset.v);
+    return Array.from(document.querySelectorAll('#' + id + ' .chip.selected')).map(function(c) { return c.dataset.v; });
   }
 
   // ============================================================
-  // SCROLL TO SIGNUP — fires Meta Pixel InitiateCheckout
+  // SCROLL TO SIGNUP
   // ============================================================
   function scrollTo_() {
     f.cta++;
@@ -1413,21 +1411,21 @@
   function obGo(step) {
     if (step === 2 && obStep === 1) {
       f.profile++;
-      if (typeof fbq !== 'undefined') fbq('track', 'AddToCart');  // Profile step completed
+      if (typeof fbq !== 'undefined') fbq('track', 'AddToCart');
     }
     saveF();
 
-    document.getElementById(`obp-${obStep}`).classList.remove('active');
-    document.getElementById(`obp-${step}`).classList.add('active');
+    document.getElementById('obp-' + obStep).classList.remove('active');
+    document.getElementById('obp-' + step).classList.add('active');
 
-    for (let i = 1; i <= 3; i++) {
-      const dot = document.getElementById(`od-${i}`);
-      const lbl = document.getElementById(`olbl-${i}`);
+    for (var i = 1; i <= 3; i++) {
+      var dot = document.getElementById('od-' + i);
+      var lbl = document.getElementById('olbl-' + i);
       dot.classList.remove('active', 'done');
       lbl.classList.remove('active', 'done');
       if (i < step) { dot.classList.add('done'); dot.innerHTML = '✓'; lbl.classList.add('done'); }
       else if (i === step) { dot.classList.add('active'); lbl.classList.add('active'); }
-      if (i < 3) document.getElementById(`ol-${i}`).classList.toggle('filled', i < step);
+      if (i < 3) document.getElementById('ol-' + i).classList.toggle('filled', i < step);
     }
 
     obStep = step;
@@ -1438,132 +1436,123 @@
   // SUBMIT — Google Sheets + Meta Pixel Lead event
   // ============================================================
   function submitWaitlist() {
-    const submitBtn = document.querySelector('#obp-2 .btn-primary');
-    const origText = submitBtn.textContent;
+    var submitBtn = document.querySelector('#obp-2 .btn-primary');
+    var origText = submitBtn.textContent;
     submitBtn.textContent = 'Saving...';
     submitBtn.disabled = true;
 
     f.joined++;
     saveF();
 
-    const name = document.getElementById('ob-name').value || 'Friend';
-    const email = document.getElementById('ob-email').value || '—';
-    const loc = document.getElementById('ob-location').value || '—';
-    const seniority = document.getElementById('ob-seniority').value || '—';
-    const func = document.getElementById('ob-function').value || '—';
-    const stage = document.getElementById('ob-stage').value || '—';
-    const alumni = getChips('ob-alumni').join(', ') || '—';
-    const industries = getChips('ob-industry').join(', ') || '—';
-    const signals = getChips('ob-signals').join(', ') || '—';
-    const actions = getChips('ob-actions').join(', ') || '—';
-    const position = Math.floor(Math.random() * 40) + 128;
+    var name = document.getElementById('ob-name').value || 'Friend';
+    var email = document.getElementById('ob-email').value || '';
+    var loc = document.getElementById('ob-location').value || '';
+    var seniority = document.getElementById('ob-seniority').value || '';
+    var func = document.getElementById('ob-function').value || '';
+    var stage = document.getElementById('ob-stage').value || '';
+    var alumni = getChips('ob-alumni').join(', ') || '';
+    var industries = getChips('ob-industry').join(', ') || '';
+    var signals = getChips('ob-signals').join(', ') || '';
+    var actions = getChips('ob-actions').join(', ') || '';
+    var position = Math.floor(Math.random() * 40) + 128;
 
-    // ---- Populate thank-you page ----
+    // Populate thank-you page
     document.getElementById('ty-name').textContent = name.split(' ')[0];
-    document.getElementById('ty-position').textContent = `#${position}`;
-    document.getElementById('ty-details').innerHTML = `
-      <div class="ty-row"><span class="lbl">Email</span><span class="val">${email}</span></div>
-      <div class="ty-row"><span class="lbl">Location</span><span class="val">${loc}</span></div>
-      <div class="ty-row"><span class="lbl">Role</span><span class="val">${func} · ${seniority}</span></div>
-      <div class="ty-row"><span class="lbl">Company stage</span><span class="val">${stage}</span></div>
-      <div class="ty-row"><span class="lbl">Industries</span><span class="val">${industries}</span></div>
-      <div class="ty-row"><span class="lbl">Top signals</span><span class="val">${signals}</span></div>
-      <div class="ty-row"><span class="lbl">Actions wanted</span><span class="val">${actions}</span></div>
-    `;
+    document.getElementById('ty-position').textContent = '#' + position;
+    document.getElementById('ty-details').innerHTML =
+      '<div class="ty-row"><span class="lbl">Email</span><span class="val">' + email + '</span></div>' +
+      '<div class="ty-row"><span class="lbl">Location</span><span class="val">' + loc + '</span></div>' +
+      '<div class="ty-row"><span class="lbl">Role</span><span class="val">' + func + ' · ' + seniority + '</span></div>' +
+      '<div class="ty-row"><span class="lbl">Company stage</span><span class="val">' + stage + '</span></div>' +
+      '<div class="ty-row"><span class="lbl">Industries</span><span class="val">' + industries + '</span></div>' +
+      '<div class="ty-row"><span class="lbl">Top signals</span><span class="val">' + signals + '</span></div>' +
+      '<div class="ty-row"><span class="lbl">Actions wanted</span><span class="val">' + actions + '</span></div>';
 
-    // ---- Fire Meta Pixel Lead event ----
+    // Fire Meta Pixel Lead event
     if (typeof fbq !== 'undefined') {
-      fbq('track', 'Lead', {
-        content_name: 'InnerLoop Waitlist',
-        content_category: PAGE_VARIANT,
-        value: 0,
-        currency: 'USD',
+      fbq('track', 'Lead', { content_name: 'InnerLoop Waitlist', content_category: PAGE_VARIANT });
+    }
+
+    // Send to Google Sheets via hidden iframe form
+    try {
+      var iframe = document.createElement('iframe');
+      iframe.name = 'sheet_iframe_' + Date.now();
+      iframe.style.display = 'none';
+      document.body.appendChild(iframe);
+
+      var form = document.createElement('form');
+      form.method = 'POST';
+      form.action = GOOGLE_SHEETS_URL;
+      form.target = iframe.name;
+
+      var payload = {
+        name: name, email: email, location: loc, seniority: seniority,
+        'function': func, company_stage: stage, alumni: alumni,
+        industries: industries, signals: signals, actions: actions,
+        position: String(position), variant: PAGE_VARIANT,
+        utm_source: utms.utm_source, utm_medium: utms.utm_medium,
+        utm_campaign: utms.utm_campaign, utm_content: utms.utm_content,
+        utm_term: utms.utm_term, referrer: document.referrer,
+        timestamp: new Date().toISOString()
+      };
+
+      Object.keys(payload).forEach(function(key) {
+        var input = document.createElement('input');
+        input.type = 'hidden';
+        input.name = key;
+        input.value = payload[key] || '';
+        form.appendChild(input);
       });
+
+      document.body.appendChild(form);
+      form.submit();
+      form.remove();
+      setTimeout(function() { iframe.remove(); }, 5000);
+      console.log('Sheet submission sent', payload);
+    } catch(err) {
+      console.warn('Sheet submission error:', err);
     }
 
-    // ---- Send to Google Sheets via Apps Script Web App ----
-    const payload = {
-      name, email, location: loc, seniority, function: func,
-      company_stage: stage, alumni, industries, signals, actions,
-      position, variant: PAGE_VARIANT,
-      utm_source: utms.utm_source,
-      utm_medium: utms.utm_medium,
-      utm_campaign: utms.utm_campaign,
-      utm_content: utms.utm_content,
-      utm_term: utms.utm_term,
-      referrer: document.referrer,
-      timestamp: new Date().toISOString(),
-    };
-
-    if (GOOGLE_SHEETS_URL && GOOGLE_SHEETS_URL !== 'YOUR_GOOGLE_SHEETS_WEBAPP_URL') {
-      // Use hidden iframe + form to avoid CORS issues with Apps Script
-      try {
-        var iframe = document.createElement('iframe');
-        iframe.name = 'hidden_iframe_' + Date.now();
-        iframe.style.display = 'none';
-        document.body.appendChild(iframe);
-
-        var form = document.createElement('form');
-        form.method = 'POST';
-        form.action = GOOGLE_SHEETS_URL;
-        form.target = iframe.name;
-
-        Object.entries(payload).forEach(function([key, val]) {
-          var input = document.createElement('input');
-          input.type = 'hidden';
-          input.name = key;
-          input.value = val || '';
-          form.appendChild(input);
-        });
-
-        document.body.appendChild(form);
-        form.submit();
-        form.remove();
-
-        // Clean up iframe after a delay
-        setTimeout(function() { iframe.remove(); }, 5000);
-        console.log('✅ Sheet submission sent');
-      } catch(err) {
-        console.warn('Sheet submission error:', err);
-      }
-
-      submitBtn.textContent = origText;
-      submitBtn.disabled = false;
-      obGo(3);
-    } else {
-      // No webhook configured — just log and proceed
-      console.log('📋 Waitlist signup (no webhook configured):', payload);
-      submitBtn.textContent = origText;
-      submitBtn.disabled = false;
-      obGo(3);
-    }
+    submitBtn.textContent = origText;
+    submitBtn.disabled = false;
+    obGo(3);
   }
 
   // ============================================================
   // SHARING
   // ============================================================
-  const shareText = "I just signed up for InnerLoop — an AI-powered weekly intelligence brief personalized for your role and industry. No more newsletter overload. Check it out:";
-  const shareUrl = window.location.href.split('?')[0];  // Clean URL without UTMs
+  var shareText = "I just signed up for InnerLoop — an AI-powered weekly intelligence brief personalized for your role and industry. No more newsletter overload. Check it out:";
+  var shareUrl = window.location.href.split('?')[0];
 
   function shareWA() {
     f.shared++; saveF();
     if (typeof fbq !== 'undefined') fbq('trackCustom', 'Share', { method: 'whatsapp' });
-    window.open(`https://wa.me/?text=${encodeURIComponent(shareText + ' ' + shareUrl)}`, '_blank');
+    window.open('https://wa.me/?text=' + encodeURIComponent(shareText + ' ' + shareUrl), '_blank');
   }
 
   function shareLI() {
     f.shared++; saveF();
     if (typeof fbq !== 'undefined') fbq('trackCustom', 'Share', { method: 'linkedin' });
-    window.open(`https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(shareUrl)}`, '_blank');
+    window.open('https://www.linkedin.com/sharing/share-offsite/?url=' + encodeURIComponent(shareUrl), '_blank');
   }
 
   function shareTW() {
     f.shared++; saveF();
     if (typeof fbq !== 'undefined') fbq('trackCustom', 'Share', { method: 'twitter' });
-    window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(shareText)}&url=${encodeURIComponent(shareUrl)}`, '_blank');
+    window.open('https://twitter.com/intent/tweet?text=' + encodeURIComponent(shareText) + '&url=' + encodeURIComponent(shareUrl), '_blank');
   }
 
   function copyLink() {
     f.shared++; saveF();
     if (typeof fbq !== 'undefined') fbq('trackCustom', 'Share', { method: 'copy_link' });
-    navigator.clipboard.wri
+    navigator.clipboard.writeText(shareUrl).then(function() {
+      var btn = event.target;
+      var orig = btn.textContent;
+      btn.textContent = '✓ Copied!';
+      setTimeout(function() { btn.textContent = orig; }, 2000);
+    });
+  }
+</script>
+
+</body>
+</html>
